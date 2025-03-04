@@ -1,1 +1,1 @@
-# AnotherMentor deploy modules
+# another-mentor deploy modules
