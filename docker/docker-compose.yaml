@@ -4,6 +4,7 @@ x-user-configs: &pg-config-env
   POSTGRES_PORT: ${POSTGRES_PORT:-5432}
   POSTGRES_USER: ${POSTGRES_USER:-postgres}
   POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+  POSTGRES_DB: ${POSTGRES_DB:-user}
   TZ: Asia/Shanghai
 
 services:
@@ -34,6 +35,7 @@ services:
       - another-mentor-network
     volumes:
       - ./logs:/app/logs
+      - ./etc:/app/etc
     restart: always
 
   postgres:
@@ -46,6 +48,8 @@ services:
     networks:
       - another-mentor-network
     restart: always
+    ports:
+      - 5432:5432
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 5s
