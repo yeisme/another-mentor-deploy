@@ -1,3 +1,5 @@
 # database file
 *_data/
 .env
+logs/*
+*.log
