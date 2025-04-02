@@ -1,3 +1,4 @@
+-- users table
 CREATE TABLE IF NOT EXISTS "users" (
   "id" bigserial,
   "username" varchar(50) NOT NULL,
