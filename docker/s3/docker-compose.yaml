@@ -24,3 +24,7 @@ services:
 
 volumes:
   minio_data:
+
+networks:
+  minio-network:
+    driver: bridge
