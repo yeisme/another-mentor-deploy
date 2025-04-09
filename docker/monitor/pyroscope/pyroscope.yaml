@@ -1,0 +1,29 @@
+log-level: debug
+scrape-configs:
+  - job-name: pyroscope
+    scrape-interval: 10s
+    targets:
+      - application: pyroscope
+        spy-name: gospy
+        host: markdown
+        port: 9090
+        path: /debug/pprof/profile
+        labels:
+          env: dev
+    profiles:
+      - spy-name: gospy
+        type: cpu
+        path: /debug/pprof/profile
+        duration: 10s
+      - spy-name: gospy
+        type: heap
+        path: /debug/pprof/heap
+      - spy-name: gospy
+        type: block
+        path: /debug/pprof/block
+      - spy-name: gospy
+        type: mutex
+        path: /debug/pprof/mutex
+      - spy-name: gospy
+        type: goroutine
+        path: /debug/pprof/goroutine

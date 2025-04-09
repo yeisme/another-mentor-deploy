@@ -1,0 +1,77 @@
+global:
+  scrape_interval: 15s # 每15秒抓取一次数据
+  evaluation_interval: 15s # 每15秒评估一次告警规则
+  scrape_timeout: 10s # 抓取超时设置为10秒
+
+# 告警管理器配置
+# alerting:
+#   alertmanagers:
+#     - static_configs:
+#         - targets:
+#           # - alertmanager:9093
+
+# 规则文件加载
+rule_files:
+  # - "rules/alert_rules.yml"
+  # - "rules/recording_rules.yml"
+
+# 抓取配置
+scrape_configs:
+  # Prometheus自身监控
+  - job_name: "prometheus"
+    static_configs:
+      - targets: ["prometheus:9090"]
+
+  # MinIO监控
+  - job_name: "minio"
+    metrics_path: /minio/v2/metrics/cluster
+    scheme: http
+    static_configs:
+      - targets: ["minio:9000"]
+        labels:
+          service: "minio"
+          env: "prod"
+
+  # Grafana监控
+  - job_name: "grafana"
+    static_configs:
+      - targets: ["grafana:3000"]
+        labels:
+          service: "grafana"
+          env: "prod"
+
+  # Pyroscope监控
+  - job_name: "pyroscope"
+    static_configs:
+      - targets: ["pyroscope:4040"]
+        labels:
+          service: "pyroscope"
+          env: "prod"
+
+  # tempo
+  - job_name: "tempo"
+    static_configs:
+      - targets: ["tempo:3201"]
+        labels:
+          service: "tempo"
+          env: "prod"
+
+  # 通过Docker服务发现自动发现容器
+  - job_name: "docker"
+    docker_sd_configs:
+      - host: unix:///var/run/docker.sock
+        filters:
+          - name: label
+            values: ["prometheus.io/scrape=true"]
+    relabel_configs:
+      - source_labels: [__meta_docker_container_name]
+        target_label: container_name
+      - source_labels: [__meta_docker_container_label_prometheus_io_path]
+        regex: (.+)
+        target_label: __metrics_path__
+        replacement: ${1}
+      - source_labels:
+          [__address__, __meta_docker_container_label_prometheus_io_port]
+        regex: (.+);(.+)
+        target_label: __address__
+        replacement: ${1}:${2}
