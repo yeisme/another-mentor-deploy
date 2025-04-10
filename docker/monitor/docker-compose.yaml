@@ -48,21 +48,21 @@ services:
       - another-mentor-network
     restart: always
 
-tempo:
-  image: grafana/tempo:main-a4289d9
-  container_name: tempo
-  ports:
-    - "3200:3200"
-    - “4318:4318”
-    - "4317:4317"
-    - "3201:3201" # Prometheus metrics
-  volumes:
-    - ./tempo:/etc/tempo
-    - tempo_data:/tmp/tempo
-  command: ["-config.file=/etc/tempo/tempo.yaml"]
-  networks:
-    - another-mentor-network
-  restart: always
+  tempo:
+    image: grafana/tempo:main-a4289d9
+    container_name: tempo
+    ports:
+      - "3200:3200"
+      - “4318:4318”
+      - "4317:4317"
+      - "3201:3201" # Prometheus metrics
+    volumes:
+      - ./tempo:/etc/tempo
+      - tempo_data:/tmp/tempo
+    command: ["-config.file=/etc/tempo/tempo.yaml"]
+    networks:
+      - another-mentor-network
+    restart: always
 
 volumes:
   prometheus_data:
